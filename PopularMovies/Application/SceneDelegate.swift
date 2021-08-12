@@ -20,8 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.windowScene = windowScene
         
-        let viewModel: PopularMovieViewModel = PopularMovieDefaultViewModel(
-            networkService: NetworkService()
+        let viewModel: PopularMovieListViewModel = PopularMovieListDefaultViewModel(
+            networkService: DefaultNetworkService()
         )
         
         window?.rootViewController = UINavigationController(

@@ -5,7 +5,7 @@
 //  Created by Tifo Audi Alif Putra on 11/08/21.
 //
 
-import Foundation
+import UIKit
 
 public struct MoviesResponse: Codable {
     public let page: Int
@@ -14,42 +14,26 @@ public struct MoviesResponse: Codable {
     public let results: [Movie]
 }
 
-public struct Movie: Codable, Hashable {
+public struct Movie {
     
     public let id: Int
     public let title: String
-    public let backdropPath: String?
     public let posterPath: String?
     public let overview: String
     
-    public let voteAverage: Double
-    public let voteCount: Int
-    public let tagline: String?
-    public let genres: [MovieGenre]?
-    public let videos: MovieVideoResponse?
-    public let credits: MovieCreditResponse?
-    public let adult: Bool
-    public let runtime: Int?
-    public var posterURL: URL {
-        return URL(string: "https://image.tmdb.org/t/p/w500\(posterPath ?? "")")!
+    public var downloadedImages: UIImage?
+    public var posterURL: String {
+        return "https://image.tmdb.org/t/p/w500\(posterPath ?? "")"
     }
-    
-    public var backdropURL: URL {
-        return URL(string: "https://image.tmdb.org/t/p/original\(backdropPath ?? "")")!
+}
+
+extension Movie: Codable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case posterPath
+        case overview
     }
-    
-    public var voteAveragePercentText: String {
-        return "\(Int(voteAverage * 10))%"
-    }
-    
-    public static func == (lhs: Movie, rhs: Movie) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
 }
 
 public struct MovieGenre: Codable {

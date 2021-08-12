@@ -5,24 +5,17 @@
 //  Created by Tifo Audi Alif Putra on 11/08/21.
 //
 
-import Foundation
+import UIKit
 
 protocol PopularMovieViewModel {
-    var onFetchMovieSucceed: (([Movie]) -> Void)? { set get }
-    func fetchMovie()
+    var movie: Movie { set get }
 }
 
 final class PopularMovieDefaultViewModel: PopularMovieViewModel {
     
-    private let networkService: NetworkService
+    var movie: Movie
     
-    init(networkService: NetworkService) {
-        self.networkService = networkService
-    }
-    
-    var onFetchMovieSucceed: (([Movie]) -> Void)?
-    
-    func fetchMovie() {
-        
+    init(movie: Movie) {
+        self.movie = movie
     }
 }

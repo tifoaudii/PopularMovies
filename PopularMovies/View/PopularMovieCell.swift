@@ -18,13 +18,15 @@ final class PopularMovieCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        configureView()
     }
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        configureView()
     }
     
-    func bindViewWith(movie: Movie) {
+    private func configureView() {
         container.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(container)
         contentView.addSubview(movieImageView)
@@ -33,13 +35,11 @@ final class PopularMovieCell: UITableViewCell {
         movieImageView.layer.cornerRadius = 4
         movieImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        titleLabel.text = movie.title
         titleLabel.font = UIFont.preferredFont(forTextStyle: .headline)
         titleLabel.adjustsFontForContentSizeCategory = true
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.numberOfLines = 0
         
-        overviewLabel.text = movie.overview
         overviewLabel.font = UIFont.preferredFont(forTextStyle: .caption1)
         overviewLabel.adjustsFontForContentSizeCategory = true
         overviewLabel.numberOfLines = 0
@@ -67,5 +67,15 @@ final class PopularMovieCell: UITableViewCell {
             movieLabelStackView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -10),
             movieLabelStackView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -10)
         ])
+    }
+    
+    func bindViewWith(viewModel: PopularMovieViewModel) {
+        let movie = viewModel.movie
+        
+        titleLabel.text = movie.title
+        overviewLabel.text = movie.overview
+        ImageClient.shared.setImage(from: movie.posterURL, placeholderImage: nil) { [weak self] image in
+            self?.movieImageView.image = image
+        }
     }
 }

@@ -9,9 +9,9 @@ import UIKit
 
 final class PopularMovieListViewController: UITableViewController {
     
-    private let viewModel: PopularMovieViewModel
+    private let viewModel: PopularMovieListViewModel
     
-    init(viewModel: PopularMovieViewModel) {
+    init(viewModel: PopularMovieListViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -23,6 +23,8 @@ final class PopularMovieListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureView()
+        fetchMovies()
+        bindViewModelEvent()
     }
     
     private func configureView() {
@@ -37,12 +39,39 @@ final class PopularMovieListViewController: UITableViewController {
         )
     }
     
+    private func fetchMovies() {
+        viewModel.fetchMovie()
+    }
+    
+    private func bindViewModelEvent() {
+        viewModel.onFetchMovieSucceed = { [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+        
+        viewModel.onFetchMovieFailure = { error in
+            print(error)
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        0
+        viewModel.movies.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        PopularMovieCell()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: PopularMovieCell.cellIdentifier, for: indexPath) as? PopularMovieCell else {
+            return UITableViewCell()
+        }
+        
+        let movie = viewModel.movies[indexPath.row]
+        cell.bindViewWith(
+            viewModel: PopularMovieDefaultViewModel(
+                movie: movie
+            )
+        )
+        
+        return cell
     }
 }
 
